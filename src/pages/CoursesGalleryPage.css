@@ -17,16 +17,48 @@
     gap: var(--spacing-lg);
     margin-top: var(--spacing-md);
     align-items: stretch;
+
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    visibility: hidden;
+    transition: opacity 0.4s ease-out, max-height 1s ease-out, visibility 0s linear 0.5s;
 }
+
+.courses-grid.loaded {
+    opacity: 1;
+    max-height: fit-content;
+    visibility: visible;
+    overflow: visible;
+    transition: opacity 0.4s ease-out, max-height 1s ease-out, visibility 0s linear 0s;
+}
+
+/* Обертка для анимации отдельной карточки */
+.grid-item-animate {
+    opacity: 0;
+    transform: translateY(15px);
+    transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+}
+
+/* Активное состояние анимации карточки */
+.grid-item-animate.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
 
 .currency-card-link {
     text-decoration: none;
     color: inherit;
     display: flex;
     border-radius: var(--border-radius-md);
-    transition: var(--transition-base);
     outline: none;
     position: relative;
+    height: 100%;
+}
+
+.currency-card-link:hover {
+    text-decoration: none;
 }
 
 .currency-card-link:focus-visible {
@@ -70,7 +102,6 @@
     margin-bottom: var(--spacing-sm);
     flex-shrink: 0;
 }
-
 
 .currency-card .currency-code {
     font-size: var(--font-size-base);

@@ -112,6 +112,14 @@
     margin-bottom: var(--spacing-xl);
 }
 
+.history-content-wrapper {
+    min-height: 332px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+}
+
 .chart-container {
     width: 100%;
     max-width: 900px;
@@ -129,4 +137,7 @@
 
 .chart-loading, .chart-error, .chart-info {
     margin: var(--spacing-xl) auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

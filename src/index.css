@@ -13,7 +13,7 @@
   --icon-placeholder-text-dark: #181a1e;
 
   --bg-color-light: #ffffff;
-  --surface-color-light: #f8f9fa;
+  --surface-color-light: #ffffff;
   --surface-hover-color-light: #f1f3f5;
   --text-color-light: #202124;
   --text-secondary-color-light: #5f6368;
@@ -102,7 +102,6 @@ body {
   padding: 0 var(--spacing-md);
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   min-height: 100dvh;
 }
@@ -316,4 +315,45 @@ a:focus-visible {
 .theme-toggle-button span {
     line-height: 1;
     display: block;
+}
+
+.fade-in-up-enter {
+  opacity: 0;
+  transform: translateY(15px);
+  transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+}
+
+.fade-in-up-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fade-in-enter {
+  opacity: 0;
+  transition: opacity 0.5s ease-in;
+}
+.fade-in-enter-active {
+  opacity: 1;
+}
+
+.loaded {
+  /* Маркерный класс */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-in-up-enter,
+  .fade-in-enter {
+    transition: none;
+  }
+}
+
+.blur-background > *:not(.spinner-container) {
+  filter: blur(4px);
+  transition: filter 0.3s ease-out;
+  pointer-events: none;
+  user-select: none;
+}
+
+.blur-background-leave > *:not(.spinner-container) {
+  filter: blur(0px);
 }

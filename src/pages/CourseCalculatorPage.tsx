@@ -13,6 +13,7 @@ import RateHistoryChart from "../components/RateHistoryChart";
 import { formatRateDisplay } from "../utils/formatting";
 import { HISTORY_DAYS } from "../constants";
 import "./CourseCalculatorPage.css";
+import LoadingSpinner from "../components/LoadingSpinner.tsx";
 
 const CourseCalculatorPage: React.FC = () => {
   const { from = "eur", to = "usd" } = useParams<{
@@ -42,6 +43,27 @@ const CourseCalculatorPage: React.FC = () => {
 
   const fromUpper = useMemo(() => from.toUpperCase(), [from]);
   const toUpper = useMemo(() => to.toUpperCase(), [to]);
+
+  const [isRateVisible, setIsRateVisible] = useState(false);
+  const [isHistoryVisible, setIsHistoryVisible] = useState(false);
+
+  useEffect(() => {
+    if (!currentRateLoading && currentRate !== null) {
+      const timer = setTimeout(() => setIsRateVisible(true), 50); // Небольшая задержка
+      return () => clearTimeout(timer);
+    } else {
+      setIsRateVisible(false);
+    }
+  }, [currentRateLoading, currentRate]);
+
+  useEffect(() => {
+    if (!historyLoading && !historyError && historyData?.length > 0) {
+      const timer = setTimeout(() => setIsHistoryVisible(true), 50); // Небольшая задержка
+      return () => clearTimeout(timer);
+    } else {
+      setIsHistoryVisible(false);
+    }
+  }, [historyLoading, historyError, historyData]);
 
   useEffect(() => {
     if (
@@ -103,8 +125,13 @@ const CourseCalculatorPage: React.FC = () => {
     navigate(`/${to}/${from}`);
   }, [from, to, navigate]);
 
+  const isLoading = currentRateLoading || historyLoading;
+
   return (
-    <div className="container calculator-container">
+    <div
+      className={`container calculator-container ${isLoading ? "blur-background" : "blur-background-leave"}`}
+    >
+      {isLoading && <LoadingSpinner size="large" overlay={true} />}
       <Link to="/" className="back-link">
         ← Back to List
       </Link>
@@ -113,9 +140,6 @@ const CourseCalculatorPage: React.FC = () => {
         {fromUpper} / {toUpper}
       </h1>
 
-      {currentRateLoading && (
-        <div className="loading-message">Loading current rate...</div>
-      )}
       {currentRateError && !currentRateLoading && (
         <div className="error-message">
           Error loading rate: {currentRateError}
@@ -125,16 +149,22 @@ const CourseCalculatorPage: React.FC = () => {
         currentDate &&
         !currentRateLoading &&
         !currentRateError && (
-          <p className="current-rate">
-            Current rate (as of {currentDate}):{" "}
-            <strong>
-              1 {fromUpper} = {formatRateDisplay(currentRate)} {toUpper}
-            </strong>
-          </p>
+          <div
+            className={`fade-in-enter ${isRateVisible ? "fade-in-enter-active" : ""}`}
+          >
+            <p className="current-rate">
+              Current rate (as of {currentDate}):{" "}
+              <strong>
+                1 {fromUpper} = {formatRateDisplay(currentRate)} {toUpper}
+              </strong>
+            </p>
+          </div>
         )}
 
       {!currentRateLoading && !currentRateError && currentRate !== null && (
-        <div className="calculator">
+        <div
+          className={`calculator fade-in-up-enter ${isRateVisible ? "fade-in-up-enter-active" : ""}`}
+        >
           <CalculatorInputGroup
             id="fromAmount"
             label={fromUpper}
@@ -160,13 +190,23 @@ const CourseCalculatorPage: React.FC = () => {
 
       <div className="history-section">
         <h2>Rate History (Last {HISTORY_DAYS} Days)</h2>
-        <RateHistoryChart
-          data={historyData}
-          from={from}
-          to={to}
-          loading={historyLoading}
-          error={historyError}
-        />
+        <div
+          className={`history-content-wrapper ${isHistoryVisible ? "visible" : ""}`}
+        >
+          {historyError ? (
+            <div className="error-message chart-error">
+              Error loading history: {historyError}
+            </div>
+          ) : historyData?.length > 0 ? (
+            <div className="chart-container">
+              <RateHistoryChart data={historyData} from={from} to={to} />
+            </div>
+          ) : (
+            <div className="info-message chart-info">
+              No historical data available to display for {fromUpper}/{toUpper}.
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-﻿import React from "react";
+﻿import React, { useEffect, useState } from "react";
 import { useCurrencyRates } from "../hooks/useCurrencyRates";
 import CurrencyCard from "../components/CurrencyCard";
 import { DEFAULT_GALLERY_BASE_CURRENCY } from "../constants";
@@ -8,6 +8,25 @@ const BASE_CURRENCY = DEFAULT_GALLERY_BASE_CURRENCY;
 
 const CoursesGalleryPage: React.FC = () => {
   const { rates, date, loading, error } = useCurrencyRates(BASE_CURRENCY);
+  const [isDataVisible, setIsDataVisible] = useState(false);
+
+  useEffect(() => {
+    if (!loading && rates) {
+      const timer = setTimeout(() => {
+        setIsDataVisible(true);
+      }, 300);
+      return () => clearTimeout(timer);
+    } else {
+      setIsDataVisible(false);
+    }
+  }, [loading, rates]);
+
+  const sortedRates = React.useMemo(() => {
+    if (!rates) return [];
+    return Object.entries(rates)
+      .filter(([code]) => code.toUpperCase() !== BASE_CURRENCY.toUpperCase())
+      .sort(([codeA], [codeB]) => codeA.localeCompare(codeB));
+  }, [rates]);
 
   return (
     <div className="container courses-gallery-container">
@@ -16,33 +35,31 @@ const CoursesGalleryPage: React.FC = () => {
         <p className="update-date">Data as of: {date}</p>
       )}
 
-      {/* Loading and Error States */}
       {loading && <div className="loading-message">Loading rates...</div>}
       {error && !loading && (
         <div className="error-message">Data loading error: {error}</div>
       )}
 
-      {/* Rates Grid */}
-      {rates && !loading && !error && (
-        <div className="courses-grid">
-          {Object.entries(rates)
-            .filter(
-              ([code]) => code.toUpperCase() !== BASE_CURRENCY.toUpperCase(),
-            )
-            .sort(([codeA], [codeB]) => codeA.localeCompare(codeB))
-            .map(([currencyCode, rate]) => (
+      <div className={`courses-grid ${isDataVisible ? "loaded" : ""}`}>
+        {!loading &&
+          !error &&
+          rates &&
+          sortedRates.map(([currencyCode, rate], index) => (
+            <div
+              key={currencyCode}
+              className={`grid-item-animate ${isDataVisible ? "visible" : ""}`}
+              style={{ transitionDelay: `${index * 0.07}s` }}
+            >
               <CurrencyCard
-                key={currencyCode}
                 baseCode={BASE_CURRENCY}
                 targetCode={currencyCode}
                 rate={typeof rate === "number" ? rate : 0}
               />
-            ))}
-        </div>
-      )}
+            </div>
+          ))}
+      </div>
 
-      {/* No Data State */}
-      {!loading && !error && (!rates || Object.keys(rates).length === 0) && (
+      {!loading && !error && (!rates || sortedRates.length === 0) && (
         <div className="info-message">No exchange rate data available.</div>
       )}
     </div>
