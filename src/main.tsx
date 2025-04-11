@@ -15,32 +15,40 @@ const CourseCalculatorPage = React.lazy(
   () => import("./pages/CourseCalculatorPage.tsx"),
 );
 
-const router = createBrowserRouter([
+const repositoryName = "HseWebLab2";
+const routerBasename = `/${repositoryName}/`;
+
+const router = createBrowserRouter(
+  [
+    {
+      path: "/",
+      element: <App />,
+      children: [
+        {
+          index: true,
+          loader: galleryLoader,
+          element: (
+            <Suspense fallback={<LoadingSpinner overlay={true} size="large" />}>
+              <CoursesGalleryPage />
+            </Suspense>
+          ),
+        },
+        {
+          path: "/:from/:to",
+          loader: calculatorLoader,
+          element: (
+            <Suspense fallback={<LoadingSpinner overlay={true} size="large" />}>
+              <CourseCalculatorPage />
+            </Suspense>
+          ),
+        },
+      ],
+    },
+  ],
   {
-    path: "/",
-    element: <App />,
-    children: [
-      {
-        index: true,
-        loader: galleryLoader,
-        element: (
-          <Suspense fallback={<LoadingSpinner overlay={true} size="large" />}>
-            <CoursesGalleryPage />
-          </Suspense>
-        ),
-      },
-      {
-        path: "/:from/:to",
-        loader: calculatorLoader,
-        element: (
-          <Suspense fallback={<LoadingSpinner overlay={true} size="large" />}>
-            <CourseCalculatorPage />
-          </Suspense>
-        ),
-      },
-    ],
+    basename: routerBasename,
   },
-]);
+);
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
