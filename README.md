@@ -1,54 +1,54 @@
-# React + TypeScript + Vite
+# Currency Converter & Exchange Rate Viewer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Это веб-приложение, созданное с использованием React и TypeScript, позволяет пользователям просматривать текущие курсы обмена валют, конвертировать суммы между выбранными валютами и просматривать историю курса за последние 30 дней на графике.
 
-Currently, two official plugins are available:
+## ✨ Основные Возможности
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+*   **Галерея Курсов:** Отображает список текущих курсов обмена валют по отношению к базовой валюте (по умолчанию EUR).
+*   **Калькулятор Валют:** Позволяет выбрать две валюты (`from` и `to`) и конвертировать сумму между ними. Значения в полях ввода синхронизируются.
+*   **История Курса:** На странице калькулятора отображается график изменения курса выбранной валютной пары за последние 30 дней.
+*   **Переключение Темы:** Поддерживает светлую и темную темы оформления с возможностью переключения и сохранением выбора в `localStorage`.
+*   **Анимации:** Плавные переходы и анимации появления данных для улучшения пользовательского опыта.
+*   **Современный Роутинг:** Использует React Router v6 с Data Routers (`createBrowserRouter`) и `loader`-функциями для загрузки данных перед рендерингом страниц.
+*   **Code Splitting:** Ленивая загрузка кода страниц (`React.lazy`) для уменьшения начального размера бандла.
 
-## Expanding the ESLint configuration
+## 🛠️ Технологии
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+*   **React:** v18+
+*   **TypeScript:** Для статической типизации.
+*   **Vite:** Современный и быстрый сборщик проектов.
+*   **React Router DOM**.
+*   **Recharts:** Библиотека для построения графиков.
+*   **CSS:** Стилизация с использованием CSS Modules и CSS Variables для тем.
+*   **ESLint:** Для контроля качества кода.
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## 🚀 Установка и Запуск
+
+1.  **Клонируйте репозиторий:**
+    ```bash
+    git clone https://github.com/syrok0010/HseWebLab2
+    cd HseWebLab2
+    ```
+
+2.  **Установите зависимости:**
+    Используйте `pnpm`:
+    ```bash
+    pnpm install
+    ```
+
+3.  **Запустите сервер для разработки:**
+    ```bash
+    pnpm run dev
+    ```
+    Приложение будет доступно по адресу `http://localhost:5173` (или другому порту, указанному Vite). Режим разработки поддерживает Fast Refresh.
+
+## 📦 Сборка для Production
+
+Для создания оптимизированной сборки приложения выполните:
+
+```bash
+pnpm run build
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+## 🌐 API
+Приложение использует бесплатный API от __Frankfurter.app__ для получения актуальных и исторических данных о курсах валют.
