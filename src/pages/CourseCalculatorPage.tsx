@@ -1,11 +1,17 @@
-﻿import React, { useState, useEffect, useMemo, useCallback } from "react";
-import { useParams, Link } from "react-router-dom";
+﻿import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  useRef,
+} from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useCurrencyPairRate } from "../hooks/useCurrencyPairRate";
 import { useRateHistory } from "../hooks/useRateHistory";
 import CalculatorInputGroup from "../components/CalculatorInputGroup";
 import RateHistoryChart from "../components/RateHistoryChart";
-import { formatRateDisplay } from "../utils/formatting"; // Import formatter
-import { HISTORY_DAYS } from "../constants"; // Import constants if needed
+import { formatRateDisplay } from "../utils/formatting";
+import { HISTORY_DAYS } from "../constants";
 import "./CourseCalculatorPage.css";
 
 const CourseCalculatorPage: React.FC = () => {
@@ -13,10 +19,13 @@ const CourseCalculatorPage: React.FC = () => {
     from: string;
     to: string;
   }>();
+  const navigate = useNavigate();
 
-  const [amountFrom, setAmountFrom] = useState<string>("1");
+  const [amountFrom, setAmountFrom] = useState<string>(() => "1");
   const [amountTo, setAmountTo] = useState<string>("");
   const [lastChanged, setLastChanged] = useState<"from" | "to">("from");
+
+  const prevRateRef = useRef<number | null>(null);
 
   const {
     rate: currentRate,
@@ -35,21 +44,27 @@ const CourseCalculatorPage: React.FC = () => {
   const toUpper = useMemo(() => to.toUpperCase(), [to]);
 
   useEffect(() => {
-    if (currentRate !== null && lastChanged === "from") {
-      const fromValue = parseFloat(amountFrom);
-      if (!isNaN(fromValue)) {
-        setAmountTo(formatRateDisplay(fromValue * currentRate));
+    if (
+      currentRate !== null &&
+      (currentRate !== prevRateRef.current || amountTo === "")
+    ) {
+      if (lastChanged === "from") {
+        const numericValue = parseFloat(amountFrom);
+        if (!isNaN(numericValue)) {
+          setAmountTo(formatRateDisplay(numericValue * currentRate));
+        } else {
+          setAmountTo("");
+        }
       } else {
-        setAmountTo("");
-      }
-    } else if (currentRate !== null && lastChanged === "to") {
-      const toValue = parseFloat(amountTo);
-      if (!isNaN(toValue) && currentRate !== 0) {
-        setAmountFrom(formatRateDisplay(toValue / currentRate));
-      } else {
-        setAmountFrom("");
+        const numericValue = parseFloat(amountTo);
+        if (currentRate !== 0 && !isNaN(numericValue)) {
+          setAmountFrom(formatRateDisplay(numericValue / currentRate));
+        } else {
+          setAmountFrom("");
+        }
       }
     }
+    prevRateRef.current = currentRate;
   }, [currentRate, amountFrom, amountTo, lastChanged]);
 
   const handleAmountFromChange = useCallback(
@@ -84,6 +99,10 @@ const CourseCalculatorPage: React.FC = () => {
     [currentRate],
   );
 
+  const handleSwapCurrencies = useCallback(() => {
+    navigate(`/${to}/${from}`);
+  }, [from, to, navigate]);
+
   return (
     <div className="container calculator-container">
       <Link to="/" className="back-link">
@@ -94,7 +113,6 @@ const CourseCalculatorPage: React.FC = () => {
         {fromUpper} / {toUpper}
       </h1>
 
-      {/* Current Rate Section */}
       {currentRateLoading && (
         <div className="loading-message">Loading current rate...</div>
       )}
@@ -115,7 +133,6 @@ const CourseCalculatorPage: React.FC = () => {
           </p>
         )}
 
-      {/* Calculator Section - Show only if rate is loaded successfully */}
       {!currentRateLoading && !currentRateError && currentRate !== null && (
         <div className="calculator">
           <CalculatorInputGroup
@@ -124,9 +141,14 @@ const CourseCalculatorPage: React.FC = () => {
             value={amountFrom}
             onChange={handleAmountFromChange}
           />
-          <div className="swap-icon" aria-hidden="true">
-            <span>⇄</span>{" "}
-          </div>
+          <button
+            className="swap-icon"
+            onClick={handleSwapCurrencies}
+            title={`Swap ${fromUpper} and ${toUpper}`}
+            aria-label={`Swap currencies ${fromUpper} and ${toUpper}`}
+          >
+            <span>⇄</span>
+          </button>
           <CalculatorInputGroup
             id="toAmount"
             label={toUpper}
@@ -136,7 +158,6 @@ const CourseCalculatorPage: React.FC = () => {
         </div>
       )}
 
-      {/* History Section */}
       <div className="history-section">
         <h2>Rate History (Last {HISTORY_DAYS} Days)</h2>
         <RateHistoryChart

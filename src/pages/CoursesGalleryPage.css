@@ -1,77 +1,107 @@
-﻿.courses-gallery-container h1 {
-    margin-bottom: 0.5em;
+﻿/* CoursesGalleryPage.css */
+
+.courses-gallery-container h1 {
+    text-align: center;
+    margin-bottom: var(--spacing-sm);
+    color: var(--app-accent-color);
 }
 
 .update-date {
-    font-size: 0.9em;
-    color: var(--info-color);
-    margin-bottom: 2em;
+    font-size: var(--font-size-sm);
+    color: var(--app-text-secondary-color);
+    margin-bottom: var(--spacing-xl);
     text-align: center;
 }
 
 .courses-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 1.5rem;
-    margin-top: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: var(--spacing-lg);
+    margin-top: var(--spacing-md);
+    align-items: stretch;
 }
 
 .currency-card-link {
     text-decoration: none;
     color: inherit;
-    display: block;
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-    border-radius: 8px;
+    display: flex;
+    border-radius: var(--border-radius-md);
+    transition: var(--transition-base);
     outline: none;
+    position: relative;
 }
 
-.currency-card-link:focus-visible .currency-card {
-    outline: 2px solid var(--link-color);
-    outline-offset: 2px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+.currency-card-link:focus-visible {
+    box-shadow: 0 0 0 2px var(--app-accent-color);
 }
-
 
 .currency-card {
-    background-color: var(--container-bg);
-    color: var(--text-color);
-    padding: 1.5em 1em;
-    border-radius: 8px;
+    background-color: var(--app-surface-color);
+    color: var(--app-text-color);
+    /* Уменьшаем верхний паддинг */
+    padding: var(--spacing-md) var(--spacing-md) var(--spacing-md);
+    border-radius: inherit;
     text-align: center;
-    border: 1px solid var(--separator-color);
+    border: 1px solid var(--app-border-color);
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    min-height: 130px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /* Убираем min-height, пусть высота определяется контентом и сеткой */
+    /* min-height: 165px; */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
     cursor: pointer;
-    transition: background-color 0.2s ease, border-color 0.2s ease;
+    transition: var(--transition-base);
+    transition-property: transform, box-shadow, background-color, border-color;
+    width: 100%;
 }
 
 .currency-card-link:hover .currency-card {
     transform: translateY(-4px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-    border-color: var(--link-hover-color);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+    background-color: var(--app-surface-hover-color);
+    border-color: var(--app-accent-color);
 }
 
+.currency-icon-placeholder {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-semibold);
+    color: var(--app-icon-placeholder-text);
+    /* Уменьшаем отступ под иконкой */
+    margin-bottom: var(--spacing-sm);
+    flex-shrink: 0;
+}
+
+/* Убираем обертку и ее min-height */
+/* .currency-details { ... } */
 
 .currency-card .currency-code {
-    font-size: 1.5em;
-    font-weight: 600;
-    margin-bottom: 0.6em;
-    color: var(--link-color);
-    line-height: 1.1;
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    margin-bottom: var(--spacing-xs);
+    color: var(--app-text-color);
+    line-height: 1.2;
 }
 
 .currency-card .currency-rate {
-    font-size: 1.15em;
-    font-weight: 500;
-    margin-bottom: 0.4em;
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-medium);
+    /* Увеличиваем отступ снизу, т.к. нет обертки details */
+    margin-bottom: var(--spacing-md);
+    color: var(--app-accent-color);
     word-break: break-all;
+    line-height: 1.3;
 }
 
 .currency-card .currency-base {
-    font-size: 0.85em;
-    color: var(--info-color);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-normal);
+    color: var(--app-text-secondary-color);
+    margin-top: auto; /* Прижимаем к низу */
+    padding-top: var(--spacing-sm);
 }
