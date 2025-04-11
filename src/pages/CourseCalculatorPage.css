@@ -1,0 +1,89 @@
+﻿.current-rate {
+    font-size: 1.1em;
+    margin: 1.5rem 0 2rem;
+    text-align: center;
+    color: var(--text-color);
+}
+.current-rate strong {
+    color: var(--link-color);
+    font-weight: 600;
+}
+
+.calculator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex: 1;
+    min-width: 150px;
+    max-width: 250px;
+}
+.input-group label {
+    margin-bottom: 0.5em;
+    font-weight: 500;
+    font-size: 0.9em;
+    color: var(--info-color);
+}
+.input-group input {
+    width: 100%;
+}
+
+.swap-icon {
+    font-size: 1.8em;
+    color: var(--link-color);
+    cursor: default;
+    padding: 0 0.5rem;
+    align-self: flex-end;
+    margin-bottom: 0.6em;
+    line-height: 1;
+}
+
+/* --- History Section --- */
+.history-section {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--separator-color);
+}
+
+.history-section h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+.chart-container {
+    width: 100%;
+    max-width: 850px;
+    margin: 0 auto;
+    /* Optional background/padding removed, rely on container background */
+    /* background-color: rgba(0, 0, 0, 0.05); */
+    /* padding: 1rem; */
+    /* border-radius: 8px; */
+    box-sizing: border-box;
+    position: relative;
+}
+
+.recharts-tooltip-wrapper {
+    outline: none;
+}
+
+.recharts-cartesian-axis-tick-line {
+    stroke: var(--chart-axis-color);
+}
+
+.recharts-legend-item {
+    margin-right: 15px !important;
+}
+
+.chart-loading, .chart-error, .chart-info {
+    max-width: 100%;
+    margin-top: 2rem;
+}

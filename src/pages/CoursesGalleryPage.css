@@ -1,0 +1,77 @@
+﻿.courses-gallery-container h1 {
+    margin-bottom: 0.5em;
+}
+
+.update-date {
+    font-size: 0.9em;
+    color: var(--info-color);
+    margin-bottom: 2em;
+    text-align: center;
+}
+
+.courses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.currency-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    border-radius: 8px;
+    outline: none;
+}
+
+.currency-card-link:focus-visible .currency-card {
+    outline: 2px solid var(--link-color);
+    outline-offset: 2px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+
+.currency-card {
+    background-color: var(--container-bg);
+    color: var(--text-color);
+    padding: 1.5em 1em;
+    border-radius: 8px;
+    text-align: center;
+    border: 1px solid var(--separator-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 130px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.currency-card-link:hover .currency-card {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    border-color: var(--link-hover-color);
+}
+
+
+.currency-card .currency-code {
+    font-size: 1.5em;
+    font-weight: 600;
+    margin-bottom: 0.6em;
+    color: var(--link-color);
+    line-height: 1.1;
+}
+
+.currency-card .currency-rate {
+    font-size: 1.15em;
+    font-weight: 500;
+    margin-bottom: 0.4em;
+    word-break: break-all;
+}
+
+.currency-card .currency-base {
+    font-size: 0.85em;
+    color: var(--info-color);
+}

@@ -1,0 +1,259 @@
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+
+  /* --- Dark Mode Defaults --- */
+  --text-color: rgba(255, 255, 255, 0.87);
+  --background-color: #242424;
+  --container-bg: #2d2d2d;
+  --link-color: #6495ed;
+  --link-hover-color: #87cefa;
+  --button-bg: #3a3a3a;
+  --button-text-color: rgba(255, 255, 255, 0.87);
+  --button-hover-bg: #4a4a4a;
+  --button-border-color: transparent;
+  --button-hover-border-color: #6495ed;
+  --input-bg: #3a3a3a;
+  --input-text-color: rgba(255, 255, 255, 0.87);
+  --input-border-color: #555;
+  --input-focus-border-color: #6495ed;
+  --separator-color: #444;
+  --error-color: #e57373;
+  --error-bg: rgba(239, 83, 80, 0.1);
+  --error-border-color: rgba(239, 83, 80, 0.3);
+  --info-color: #aaa;
+  --chart-grid-color: #555;
+  --chart-axis-color: #aaa;
+  --chart-legend-color: #ccc;
+  --chart-line-color: #87cefa;
+  --tooltip-bg: #333;
+  --tooltip-border: #555;
+  --tooltip-shadow: none;
+  --tooltip-label-color: #eee;
+  --chart-ref-line-color: #aaa;
+  --chart-ref-line-label-color: #aaa;
+
+
+  color: var(--text-color);
+  background-color: var(--background-color);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* --- Light Mode --- */
+@media (prefers-color-scheme: light) {
+  :root {
+    --text-color: #213547;
+    --background-color: #f0f4f8;
+    --container-bg: #ffffff;
+    --link-color: #4682b4;
+    --link-hover-color: #5a9bd5;
+    --button-bg: #e8eef3;
+    --button-text-color: #213547;
+    --button-hover-bg: #ffffff;
+    --button-border-color: #d8dfe6;
+    --button-hover-border-color: #4682b4;
+    --input-bg: #ffffff;
+    --input-text-color: #213547;
+    --input-border-color: #d8dfe6;
+    --input-focus-border-color: #4682b4;
+    --separator-color: #d8dfe6;
+    --error-color: #d32f2f;
+    --error-bg: rgba(211, 47, 47, 0.05);
+    --error-border-color: rgba(211, 47, 47, 0.2);
+    --info-color: #555;
+    --chart-grid-color: #e0e6ed;
+    --chart-axis-color: #555;
+    --chart-legend-color: #333;
+    --chart-line-color: #4682b4;
+    --tooltip-bg: #ffffff;
+    --tooltip-border: #ccc;
+    --tooltip-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    --tooltip-label-color: #333;
+    --chart-ref-line-color: #667;
+    --chart-ref-line-label-color: #667;
+  }
+
+  .recharts-tooltip-wrapper .recharts-default-tooltip {
+    background-color: var(--tooltip-bg) !important;
+    border: 1px solid var(--tooltip-border) !important;
+    box-shadow: var(--tooltip-shadow);
+  }
+  .recharts-tooltip-wrapper .recharts-tooltip-label {
+    color: var(--tooltip-label-color) !important;
+  }
+  .recharts-tooltip-wrapper .recharts-tooltip-item {
+    color: var(--chart-line-color) !important;
+  }
+  .recharts-tooltip-wrapper .recharts-tooltip-item-name,
+  .recharts-tooltip-wrapper .recharts-tooltip-item-separator {
+    color: var(--text-color) !important;
+  }
+  .recharts-active-dot circle {
+    stroke: var(--chart-line-color);
+  }
+  .recharts-line-dots circle {
+    fill: var(--chart-line-color);
+  }
+  .recharts-cartesian-axis-tick-value tspan {
+    fill: var(--chart-axis-color);
+  }
+  .recharts-legend-item-text {
+    color: var(--chart-legend-color) !important;
+  }
+}
+
+
+/* --- Base Elements --- */
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+a {
+  font-weight: 500;
+  color: var(--link-color);
+  text-decoration: none;
+  transition: color 0.25s;
+}
+a:hover {
+  color: var(--link-hover-color);
+}
+
+h1, h2, h3 {
+  line-height: 1.2;
+  margin-top: 0;
+  margin-bottom: 1em;
+  color: var(--text-color);
+}
+
+h1 {
+  font-size: 2.2em;
+  font-weight: 700;
+}
+h2 {
+  font-size: 1.6em;
+  font-weight: 600;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid var(--button-border-color);
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: var(--button-bg);
+  color: var(--button-text-color);
+  cursor: pointer;
+  transition: border-color 0.25s, background-color 0.25s;
+}
+button:hover {
+  border-color: var(--button-hover-border-color);
+  background-color: var(--button-hover-bg);
+}
+button:focus,
+button:focus-visible {
+  outline: 2px solid var(--link-color);
+  outline-offset: 2px;
+}
+
+input[type="number"], input[type="text"] {
+  padding: 0.6em 0.8em;
+  border-radius: 6px;
+  border: 1px solid var(--input-border-color);
+  background-color: var(--input-bg);
+  color: var(--input-text-color);
+  font-size: 1em;
+  font-family: inherit;
+  transition: border-color 0.2s;
+  min-width: 100px;
+  box-sizing: border-box;
+}
+input[type="number"]:focus, input[type="text"]:focus {
+  outline: none;
+  border-color: var(--input-focus-border-color);
+  box-shadow: 0 0 0 2px rgba(var(--link-color), 0.3);
+}
+/* Hide spinner buttons on number inputs */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+
+/* --- General Container Styling --- */
+.container {
+  padding: 1.5rem 2rem;
+  max-width: 1000px;
+  margin: 2rem auto;
+  background-color: var(--container-bg);
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem 1.5rem;
+    margin: 1rem auto;
+  }
+}
+
+
+/* --- Shared Loading/Error/Info States --- */
+.loading-message,
+.error-message,
+.info-message {
+  text-align: center;
+  padding: 1.5rem 1rem;
+  margin: 1rem auto;
+  font-size: 1.1em;
+  min-height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  max-width: 800px;
+  box-sizing: border-box;
+}
+
+.loading-message {
+  color: var(--info-color);
+  background-color: rgba(170, 170, 170, 0.05);
+  border: 1px solid rgba(170, 170, 170, 0.1);
+}
+
+.error-message {
+  color: var(--error-color);
+  background-color: var(--error-bg);
+  border: 1px solid var(--error-border-color);
+  font-weight: 500;
+}
+
+.info-message {
+  color: var(--info-color);
+}
+
+
+/* --- Back Link --- */
+.back-link {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  font-size: 0.95em;
+  color: var(--link-color);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+.back-link:hover {
+  color: var(--link-hover-color);
+  text-decoration: underline;
+}
