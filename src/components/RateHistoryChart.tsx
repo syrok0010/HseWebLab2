@@ -61,7 +61,17 @@ const RateHistoryChart: React.FC<RateHistoryChartProps> = ({
           name={`1 ${fromUpper} to ${toUpper}`}
           dot={false}
         />
-        {averageRate !== null && <ReferenceLine y={averageRate} />}
+        {averageRate !== null && (
+          <ReferenceLine
+            y={averageRate}
+            label={{
+              value: `Avg: ${formatRateDisplay(averageRate)}`,
+              position: "insideTopRight",
+              fill: "var(--chart-ref-line-label-color, #aaa)",
+              fontSize: 10,
+            }}
+          />
+        )}
       </LineChart>
     </ResponsiveContainer>
   );
