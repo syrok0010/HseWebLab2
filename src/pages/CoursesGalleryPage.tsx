@@ -1,66 +1,58 @@
-﻿import React, { useEffect, useState } from "react";
-import { useCurrencyRates } from "../hooks/useCurrencyRates";
+﻿import React, { useMemo, useState, useEffect } from "react";
+import { useLoaderData } from "react-router-dom";
 import CurrencyCard from "../components/CurrencyCard";
-import { DEFAULT_GALLERY_BASE_CURRENCY } from "../constants";
+import type { GalleryLoaderData } from "../loaders";
 import "./CoursesGalleryPage.css";
 
-const BASE_CURRENCY = DEFAULT_GALLERY_BASE_CURRENCY;
-
 const CoursesGalleryPage: React.FC = () => {
-  const { rates, date, loading, error } = useCurrencyRates(BASE_CURRENCY);
-  const [isDataVisible, setIsDataVisible] = useState(false);
+  const loaderData = useLoaderData() as GalleryLoaderData;
+  const { rates, date, baseCurrency } = loaderData;
+
+  const [isAnimationActive, setIsAnimationActive] = useState(false);
 
   useEffect(() => {
-    if (!loading && rates) {
-      const timer = setTimeout(() => {
-        setIsDataVisible(true);
-      }, 300);
-      return () => clearTimeout(timer);
-    } else {
-      setIsDataVisible(false);
-    }
-  }, [loading, rates]);
+    const timer = setTimeout(() => {
+      setIsAnimationActive(true);
+    }, 50);
+    return () => clearTimeout(timer);
+  }, []);
 
-  const sortedRates = React.useMemo(() => {
+  const sortedRates = useMemo(() => {
     if (!rates) return [];
-    return Object.entries(rates)
-      .filter(([code]) => code.toUpperCase() !== BASE_CURRENCY.toUpperCase())
-      .sort(([codeA], [codeB]) => codeA.localeCompare(codeB));
+    return Object.entries(rates).sort(([codeA], [codeB]) =>
+      codeA.localeCompare(codeB),
+    );
   }, [rates]);
+
+  const hasData = rates && sortedRates.length > 0;
 
   return (
     <div className="container courses-gallery-container">
-      <h1>{BASE_CURRENCY} Exchange Rates Today</h1>
-      {date && !loading && !error && (
-        <p className="update-date">Data as of: {date}</p>
+      <h1>{baseCurrency.toUpperCase()} Exchange Rates Today</h1>
+      {date && <p className="update-date">Data as of: {date}</p>}
+
+      {!hasData && (
+        <div className="info-message">
+          Failed to load exchange rates or no data available.
+        </div>
       )}
 
-      {loading && <div className="loading-message">Loading rates...</div>}
-      {error && !loading && (
-        <div className="error-message">Data loading error: {error}</div>
-      )}
-
-      <div className={`courses-grid ${isDataVisible ? "loaded" : ""}`}>
-        {!loading &&
-          !error &&
-          rates &&
-          sortedRates.map(([currencyCode, rate], index) => (
+      {hasData && (
+        <div className={`courses-grid ${isAnimationActive ? "loaded" : ""}`}>
+          {sortedRates.map(([currencyCode, rate], index) => (
             <div
               key={currencyCode}
-              className={`grid-item-animate ${isDataVisible ? "visible" : ""}`}
+              className={`grid-item-animate ${isAnimationActive ? "visible" : ""}`}
               style={{ transitionDelay: `${index * 0.07}s` }}
             >
               <CurrencyCard
-                baseCode={BASE_CURRENCY}
+                baseCode={baseCurrency}
                 targetCode={currencyCode}
                 rate={typeof rate === "number" ? rate : 0}
               />
             </div>
           ))}
-      </div>
-
-      {!loading && !error && (!rates || sortedRates.length === 0) && (
-        <div className="info-message">No exchange rate data available.</div>
+        </div>
       )}
     </div>
   );

@@ -10,7 +10,7 @@ import {
   ResponsiveContainer,
   ReferenceLine,
 } from "recharts";
-import { HistoryDataPoint } from "../hooks/useRateHistory";
+import { HistoryDataPoint } from "../loaders.ts";
 import {
   formatRateDisplay,
   formatChartXAxis,

@@ -1,5 +1,5 @@
-﻿import React from "react";
-import { Link } from "react-router-dom";
+﻿import React, { useTransition } from "react";
+import { useNavigate } from "react-router-dom";
 import { formatRateDisplay } from "../utils/formatting";
 
 interface CurrencyCardProps {
@@ -30,9 +30,22 @@ const CurrencyCard: React.FC<CurrencyCardProps> = ({
     .substring(0, targetCode.length >= 2 ? 2 : 1)
     .toUpperCase();
 
+  const destination = `/${baseCode.toLowerCase()}/${targetCode.toLowerCase()}`;
+
+  const navigate = useNavigate();
+  const [, startTransition] = useTransition();
+
+  const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    startTransition(() => {
+      navigate(destination);
+    });
+  };
+
   return (
-    <Link
-      to={`/${baseCode.toLowerCase()}/${targetCode.toLowerCase()}`}
+    <a
+      href={destination}
+      onClick={handleClick}
       className="currency-card-link"
       aria-label={`View ${baseCode} to ${targetCode} exchange rate`}
     >
@@ -48,7 +61,7 @@ const CurrencyCard: React.FC<CurrencyCardProps> = ({
         <span className="currency-rate">{formatRateDisplay(rate)}</span>
         <span className="currency-base">per 1 {baseCode.toUpperCase()}</span>
       </div>
-    </Link>
+    </a>
   );
 };
 
