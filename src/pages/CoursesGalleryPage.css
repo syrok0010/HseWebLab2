@@ -1,6 +1,4 @@
-﻿/* CoursesGalleryPage.css */
-
-.courses-gallery-container h1 {
+﻿.courses-gallery-container h1 {
     text-align: center;
     margin-bottom: var(--spacing-sm);
     color: var(--app-accent-color);
@@ -38,7 +36,6 @@
 .currency-card {
     background-color: var(--app-surface-color);
     color: var(--app-text-color);
-    /* Уменьшаем верхний паддинг */
     padding: var(--spacing-md) var(--spacing-md) var(--spacing-md);
     border-radius: inherit;
     text-align: center;
@@ -46,8 +43,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* Убираем min-height, пусть высота определяется контентом и сеткой */
-    /* min-height: 165px; */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
     cursor: pointer;
     transition: var(--transition-base);
@@ -72,13 +67,10 @@
     font-size: var(--font-size-md);
     font-weight: var(--font-weight-semibold);
     color: var(--app-icon-placeholder-text);
-    /* Уменьшаем отступ под иконкой */
     margin-bottom: var(--spacing-sm);
     flex-shrink: 0;
 }
 
-/* Убираем обертку и ее min-height */
-/* .currency-details { ... } */
 
 .currency-card .currency-code {
     font-size: var(--font-size-base);
@@ -91,7 +83,6 @@
 .currency-card .currency-rate {
     font-size: var(--font-size-lg);
     font-weight: var(--font-weight-medium);
-    /* Увеличиваем отступ снизу, т.к. нет обертки details */
     margin-bottom: var(--spacing-md);
     color: var(--app-accent-color);
     word-break: break-all;
@@ -102,6 +93,6 @@
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-normal);
     color: var(--app-text-secondary-color);
-    margin-top: auto; /* Прижимаем к низу */
+    margin-top: auto;
     padding-top: var(--spacing-sm);
 }

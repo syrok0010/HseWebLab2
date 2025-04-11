@@ -121,14 +121,14 @@ const RateHistoryChart: React.FC<RateHistoryChartProps> = ({
             type="monotone"
             dataKey="rate"
             name={`1 ${fromUpper} to ${toUpper}`}
-            stroke="var(--chart-line-color, #87cefa)"
-            strokeWidth={2}
+            stroke="var(--app-accent-color)"
+            strokeWidth={2.5}
             dot={false}
             activeDot={{
-              r: 6,
-              strokeWidth: 1,
-              fill: "var(--chart-line-color, #87cefa)",
-              stroke: "var(--background-color)",
+              r: 5,
+              strokeWidth: 2,
+              fill: "var(--app-accent-color)",
+              stroke: "var(--app-bg-color)",
             }}
           />
           {/* Optional: Add Reference Line for Average or Current Rate */}

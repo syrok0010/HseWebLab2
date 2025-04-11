@@ -1,8 +1,6 @@
-/* index.css */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  /* Палитры остаются те же */
   --bg-color-dark: #181a1e;
   --surface-color-dark: #202329;
   --surface-hover-color-dark: #2a2e35;
@@ -12,7 +10,7 @@
   --accent-color-dark: #6ba2ff;
   --error-color-dark: #f28b82;
   --error-bg-color-dark: rgba(242, 139, 130, 0.1);
-  --icon-placeholder-text-dark: #181a1e; /* Текст на цветном плейсхолдере иконки */
+  --icon-placeholder-text-dark: #181a1e;
 
   --bg-color-light: #ffffff;
   --surface-color-light: #f8f9fa;
@@ -23,8 +21,7 @@
   --accent-color-light: #1a73e8;
   --error-color-light: #d93025;
   --error-bg-color-light: rgba(217, 48, 37, 0.05);
-  --icon-placeholder-text-light: #ffffff; /* Текст на цветном плейсхолдере иконки */
-
+  --icon-placeholder-text-light: #ffffff;
 
   --font-family-base: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
   --font-size-sm: 0.875rem;
@@ -48,8 +45,10 @@
   --spacing-xl: 2rem;
   --spacing-xxl: 3rem;
 
-  --transition-base: all 0.2s ease-in-out;
+  --transition-base: all 0.4s ease-in-out;
+}
 
+body[data-theme='dark'] {
   --app-bg-color: var(--bg-color-dark);
   --app-surface-color: var(--surface-color-dark);
   --app-surface-hover-color: var(--surface-hover-color-dark);
@@ -60,26 +59,21 @@
   --app-error-color: var(--error-color-dark);
   --app-error-bg-color: var(--error-bg-color-dark);
   --app-icon-placeholder-text: var(--icon-placeholder-text-dark);
-
-
   color-scheme: dark;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    --app-bg-color: var(--bg-color-light);
-    --app-surface-color: var(--surface-color-light);
-    --app-surface-hover-color: var(--surface-hover-color-light);
-    --app-text-color: var(--text-color-light);
-    --app-text-secondary-color: var(--text-secondary-color-light);
-    --app-border-color: var(--border-color-light);
-    --app-accent-color: var(--accent-color-light);
-    --app-error-color: var(--error-color-light);
-    --app-error-bg-color: var(--error-bg-color-light);
-    --app-icon-placeholder-text: var(--icon-placeholder-text-light);
-
-    color-scheme: light;
-  }
+body[data-theme='light'] {
+  --app-bg-color: var(--bg-color-light);
+  --app-surface-color: var(--surface-color-light);
+  --app-surface-hover-color: var(--surface-hover-color-light);
+  --app-text-color: var(--text-color-light);
+  --app-text-secondary-color: var(--text-secondary-color-light);
+  --app-border-color: var(--border-color-light);
+  --app-accent-color: var(--accent-color-light);
+  --app-error-color: var(--error-color-light);
+  --app-error-bg-color: var(--error-bg-color-light);
+  --app-icon-placeholder-text: var(--icon-placeholder-text-light);
+  color-scheme: light;
 }
 
 body {
@@ -91,11 +85,15 @@ body {
   font-weight: var(--font-weight-normal);
   color: var(--app-text-color);
   background-color: var(--app-bg-color);
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  transition: var(--transition-base);
+  transition-property: background-color, color, border-color;
 }
 
 #root {
@@ -269,8 +267,6 @@ a:focus-visible {
   fill: var(--app-accent-color);
   stroke: var(--app-bg-color);
   stroke-width: 2;
-  /* Увеличиваем радиус активной точки */
-  r: 5;
 }
 /* Стили для ReferenceLine, если она используется */
 .recharts-reference-line text {
@@ -280,4 +276,44 @@ a:focus-visible {
 .recharts-reference-line line {
   stroke: var(--app-text-secondary-color);
   stroke-opacity: 0.8;
+}
+
+.theme-toggle-button {
+    position: fixed;
+    top: var(--spacing-md);
+    right: var(--spacing-md);
+    background-color: var(--app-surface-color);
+    color: var(--app-text-secondary-color);
+    border: 1px solid var(--app-border-color);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition-base);
+    transition-property: background-color, color, border-color, box-shadow;
+    z-index: 1000;
+    font-size: 1.25rem;
+    padding: 0;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.theme-toggle-button:hover {
+    background-color: var(--app-surface-hover-color);
+    color: var(--app-text-color);
+    border-color: var(--app-text-secondary-color);
+}
+
+.theme-toggle-button:focus-visible {
+    outline: none;
+    border-color: var(--app-accent-color);
+    box-shadow: 0 0 0 2px var(--app-accent-color);
+}
+
+.theme-toggle-button span {
+    line-height: 1;
+    display: block;
 }
