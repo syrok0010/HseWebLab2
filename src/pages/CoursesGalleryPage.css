@@ -11,41 +11,76 @@
     text-align: center;
 }
 
+.controls-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+    justify-content: space-between;
+    align-items: center;
+}
+
+.search-input {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-base);
+    color: var(--app-text-color);
+    background-color: var(--app-bg-color);
+    border: 1px solid var(--app-border-color);
+    border-radius: var(--border-radius-md);
+    outline: none;
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    flex-grow: 1;
+}
+.search-input::placeholder {
+    color: var(--app-text-secondary-color);
+    opacity: 0.7;
+}
+.search-input:focus {
+    border-color: var(--app-accent-color);
+    box-shadow: 0 0 0 2px var(--app-accent-color);
+}
+
+.sort-select {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-base);
+    color: var(--app-text-color);
+    background-color: var(--app-bg-color);
+    border: 1px solid var(--app-border-color);
+    border-radius: var(--border-radius-md);
+    outline: none;
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+.sort-select:focus {
+    border-color: var(--app-accent-color);
+    box-shadow: 0 0 0 2px var(--app-accent-color);
+}
+
 .courses-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
     gap: var(--spacing-lg);
-    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-lg);
     align-items: stretch;
-
+    height: 0;
     opacity: 0;
-    max-height: 0;
     overflow: hidden;
-    visibility: hidden;
-    transition: opacity 0.4s ease-out, max-height 1s ease-out, visibility 0s linear 0.5s;
+    transition: height 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.3s ease-out 0.1s;
 }
 
 .courses-grid.loaded {
     opacity: 1;
-    max-height: fit-content;
-    visibility: visible;
-    overflow: visible;
-    transition: opacity 0.4s ease-out, max-height 1s ease-out, visibility 0s linear 0s;
 }
 
-/* Обертка для анимации отдельной карточки */
 .grid-item-animate {
     opacity: 0;
-    transform: translateY(15px);
+    transform: translateY(20px);
     transition: opacity 0.4s ease-out, transform 0.4s ease-out;
 }
 
-/* Активное состояние анимации карточки */
-.grid-item-animate.visible {
+.courses-grid.loaded .grid-item-animate {
     opacity: 1;
     transform: translateY(0);
 }
-
 
 .currency-card-link {
     text-decoration: none;
@@ -68,7 +103,7 @@
 .currency-card {
     background-color: var(--app-surface-color);
     color: var(--app-text-color);
-    padding: var(--spacing-md) var(--spacing-md) var(--spacing-md);
+    padding: var(--spacing-md);
     border-radius: inherit;
     text-align: center;
     border: 1px solid var(--app-border-color);
@@ -77,8 +112,7 @@
     align-items: center;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
     cursor: pointer;
-    transition: var(--transition-base);
-    transition-property: transform, box-shadow, background-color, border-color;
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out, background-color 0.2s, border-color 0.2s;
     width: 100%;
 }
 

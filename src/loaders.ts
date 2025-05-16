@@ -42,8 +42,12 @@ interface FrankfurterTimeseriesResponse {
   };
 }
 
+export interface CurrenciesResponse {
+  [currencyCode: string]: string;
+}
+
 export interface GalleryLoaderData {
-  rates: { [key: string]: number } | null;
+  rates: { [key: string]: [string, number] } | null;
   date: string | null;
   baseCurrency: string;
 }
@@ -61,7 +65,6 @@ export async function calculatorLoader({
   const fromUpper = from.toUpperCase();
   const toUpper = to.toUpperCase();
 
-  // --- Параллельные запросы ---
   const ratePromise = fetchApi<FrankfurterLatestResponse>("/latest", {
     base: fromUpper,
     symbols: toUpper,
@@ -126,20 +129,46 @@ export async function calculatorLoader({
   };
 }
 
+function createGalleryLoaderData(
+    latestApiResponse: FrankfurterLatestResponse | null,
+    currenciesApiResponse: CurrenciesResponse | null,
+): GalleryLoaderData {
+  if (
+      !latestApiResponse ||
+      !latestApiResponse.rates ||
+      !currenciesApiResponse
+  ) {
+    return {
+      rates: null,
+      date: latestApiResponse?.date || null,
+      baseCurrency: latestApiResponse?.base || DEFAULT_GALLERY_BASE_CURRENCY,
+    };
+  }
+
+  const transformedRates: { [key: string]: [string, number] } = {};
+
+  for (const currencyCode in latestApiResponse.rates) {
+    if (Object.prototype.hasOwnProperty.call(latestApiResponse.rates, currencyCode)) {
+      transformedRates[currencyCode] = [currenciesApiResponse[currencyCode], latestApiResponse.rates[currencyCode]];
+    }
+  }
+
+  return {
+    rates: Object.keys(transformedRates).length > 0 ? transformedRates : null,
+    date: latestApiResponse.date,
+    baseCurrency: latestApiResponse.base,
+  };
+}
+
 export async function galleryLoader(): Promise<GalleryLoaderData> {
   const base = DEFAULT_GALLERY_BASE_CURRENCY;
   try {
-    const data = await fetchApi<FrankfurterLatestResponse>("/latest", {
-      base: base.toUpperCase(),
-    });
+    const [latestData, currenciesData] = await Promise.all([
+      fetchApi<FrankfurterLatestResponse>("/latest", { base }).catch(() => null),
+      fetchApi<CurrenciesResponse>("/currencies").catch(() => null)
+    ]);
 
-    return !data || !data.rates
-      ? { rates: null, date: null, baseCurrency: base }
-      : {
-          rates: data.rates,
-          date: data.date,
-          baseCurrency: base,
-        };
+    return createGalleryLoaderData(latestData, currenciesData);
   } catch {
     return { rates: null, date: null, baseCurrency: base };
   }
