@@ -1,4 +1,5 @@
-﻿import React, { useMemo, useState, useEffect, useRef } from "react";
+﻿import React, { useMemo, useState, useEffect } from "react";
+import { flushSync } from "react-dom";
 import { useLoaderData } from "react-router-dom";
 import CurrencyCard from "../components/CurrencyCard";
 import type { GalleryLoaderData } from "../loaders";
@@ -12,8 +13,10 @@ const CoursesGalleryPage: React.FC = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOption, setSortOption] = useState<SortOption>("code_asc");
-  const gridRef = useRef<HTMLDivElement>(null);
-  const [isGridRendered, setIsGridRendered] = useState(false);
+  const [displayedRates, setDisplayedRates] = useState<
+    [string, [string, number]][]
+  >([]);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   const filteredAndSortedRates = useMemo(() => {
     if (!rates) return [];
@@ -46,59 +49,28 @@ const CoursesGalleryPage: React.FC = () => {
   }, [rates, searchTerm, sortOption]);
 
   useEffect(() => {
-    const gridElement = gridRef.current;
-    if (!gridElement) return;
-
-    const animateGridItems = (show: boolean) => {
-      setIsGridRendered(show);
-    };
-
-    if (filteredAndSortedRates.length > 0) {
-      gridElement.style.visibility = "hidden";
-      gridElement.style.height = "auto";
-      const scrollHeight = gridElement.scrollHeight;
-      gridElement.style.height = "0px";
-      gridElement.style.visibility = "visible";
-
-      requestAnimationFrame(() => {
-        gridElement.style.height = `${scrollHeight}px`;
-        gridElement.classList.add("loaded");
-        animateGridItems(true);
-      });
-    } else {
-      gridElement.style.height = `${gridElement.scrollHeight}px`;
-      requestAnimationFrame(() => {
-        gridElement.style.height = "0px";
-        gridElement.classList.remove("loaded");
-        animateGridItems(false);
-      });
+    if (isInitialLoad) {
+      setDisplayedRates(filteredAndSortedRates);
+      setIsInitialLoad(false);
+      return;
     }
 
-    const transitionEndHandler = () => {
-      if (
-        gridElement.style.height !== "0px" &&
-        gridElement.classList.contains("loaded")
-      ) {
-        gridElement.style.height = "auto";
-      }
-    };
-    gridElement.addEventListener("transitionend", transitionEndHandler);
-
-    return () =>
-      gridElement.removeEventListener("transitionend", transitionEndHandler);
-  }, [filteredAndSortedRates]);
+    document.startViewTransition(() => {
+      flushSync(() => {
+        setDisplayedRates(filteredAndSortedRates);
+      });
+    });
+  }, [filteredAndSortedRates, isInitialLoad]);
 
   const renderInfoMessage = () => {
     if (!rates) {
       return "Failed to load exchange rates or no data available.";
     }
-
     if (filteredAndSortedRates.length === 0) {
       return searchTerm
         ? `No currencies match your search for "${searchTerm}".`
         : `No exchange rates are currently available for ${baseCurrency.toUpperCase()}.`;
     }
-
     return null;
   };
 
@@ -134,26 +106,21 @@ const CoursesGalleryPage: React.FC = () => {
 
       {infoMessage && <div className="info-message">{infoMessage}</div>}
 
-      <div ref={gridRef} className="courses-grid">
-        {isGridRendered &&
-          filteredAndSortedRates.map(
-            ([currencyCode, [fullName, rateValue]], index) => (
-              <div
-                key={currencyCode}
-                className="grid-item-animate"
-                style={{
-                  transitionDelay: `${index * 0.05}s`,
-                }}
-                title={fullName}
-              >
-                <CurrencyCard
-                  baseCode={baseCurrency}
-                  targetCode={currencyCode}
-                  rate={typeof rateValue === "number" ? rateValue : 0}
-                />
-              </div>
-            ),
-          )}
+      <div className="courses-grid">
+        {displayedRates.map(([currencyCode, [fullName, rateValue]]) => (
+          <div
+            key={currencyCode}
+            className="grid-item-vt-container"
+            style={{ viewTransitionName: `currency-${currencyCode}` }}
+            title={fullName}
+          >
+            <CurrencyCard
+              baseCode={baseCurrency}
+              targetCode={currencyCode}
+              rate={rateValue}
+            />
+          </div>
+        ))}
       </div>
     </div>
   );
